@@ -111,7 +111,7 @@ export async function getSession() {
       return user;
     },
     ["session"],
-    { revalidate: 600 }, // minutes
+    { revalidate: 3600 }, // minutes
   )();
 }
 
