@@ -1,6 +1,7 @@
 "use client";
 
 import { PlusCircleIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useFormState } from "react-dom";
 import useSWR from "swr";
 import { Modal } from "~/_components/modal";
@@ -23,17 +24,22 @@ export default function AddAchatPage() {
     error: undefined as unknown as string,
   });
 
-  const { data: fournisseurs, isLoading } = useSWR<{
-    f_id: number;
-    f_nom: string;
-    f_tel: string | null;
-    f_adr: string | null;
-  }[]>("/api/fournisseurs", fetcher);
+  const search = useSearchParams();
+
+  const { data: fournisseurs, isLoading } = useSWR<
+    {
+      f_id: number;
+      f_nom: string;
+      f_tel: string | null;
+      f_adr: string | null;
+    }[]
+  >("/api/fournisseurs", fetcher);
 
   return (
     <Modal
       modalTitle="Ajouter un achat"
-      modalState={state.error === ""}
+      modalState={search.get("show") === "1"}
+      withNoRouteBack
       withHeaderClose
     >
       <form action={action} className="mx-auto w-full md:w-96">
@@ -68,8 +74,8 @@ export default function AddAchatPage() {
               </SelectTrigger>
               <SelectContent>
                 {fournisseurs?.map((fournisseur) => (
-                  <SelectItem 
-                    key={fournisseur.f_id} 
+                  <SelectItem
+                    key={fournisseur.f_id}
                     value={fournisseur.f_id.toString()}
                   >
                     {fournisseur.f_nom}
