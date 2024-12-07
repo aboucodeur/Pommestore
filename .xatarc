@@ -1,5 +1,5 @@
 {
-  "databaseURL": "https://<URL_HTTPS>/db/abou3_stack:main",
+  "databaseURL": "https://Aboubacar-Barry-s-workspace-inu9u4.us-east-1.xata.sh/db/dbiphonesapp2:main",
   "codegen": {
     "output": "src/server/db/xata.ts"
   }

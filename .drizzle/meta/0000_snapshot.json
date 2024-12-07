@@ -1,0 +1,1088 @@
+{
+  "id": "1276abd3-2b2c-4b46-a6b4-3903f3548847",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.achats": {
+      "name": "achats",
+      "schema": "",
+      "columns": {
+        "a_id": {
+          "name": "a_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "a_date": {
+          "name": "a_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "a_etat": {
+          "name": "a_etat",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "f_id": {
+          "name": "f_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "achats_fkey1": {
+          "name": "achats_fkey1",
+          "tableFrom": "achats",
+          "tableTo": "fournisseurs",
+          "columnsFrom": [
+            "f_id"
+          ],
+          "columnsTo": [
+            "f_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        },
+        "achats_fkey2": {
+          "name": "achats_fkey2",
+          "tableFrom": "achats",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.acommandes": {
+      "name": "acommandes",
+      "schema": "",
+      "columns": {
+        "ac_id": {
+          "name": "ac_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "ac_etat": {
+          "name": "ac_etat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "ac_qte": {
+          "name": "ac_qte",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "ac_prix": {
+          "name": "ac_prix",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "i_id": {
+          "name": "i_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "a_id": {
+          "name": "a_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "acommandes_fkey1": {
+          "name": "acommandes_fkey1",
+          "tableFrom": "acommandes",
+          "tableTo": "iphones",
+          "columnsFrom": [
+            "i_id"
+          ],
+          "columnsTo": [
+            "i_id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        },
+        "acommandes_fkey2": {
+          "name": "acommandes_fkey2",
+          "tableFrom": "acommandes",
+          "tableTo": "achats",
+          "columnsFrom": [
+            "a_id"
+          ],
+          "columnsTo": [
+            "a_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "acommandes_unique1": {
+          "name": "acommandes_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "i_id",
+            "a_id"
+          ]
+        }
+      }
+    },
+    "public.clients": {
+      "name": "clients",
+      "schema": "",
+      "columns": {
+        "c_id": {
+          "name": "c_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "c_nom": {
+          "name": "c_nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "c_tel": {
+          "name": "c_tel",
+          "type": "varchar(25)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "c_adr": {
+          "name": "c_adr",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "c_type": {
+          "name": "c_type",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "clients_fkey1": {
+          "name": "clients_fkey1",
+          "tableFrom": "clients",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "clients_unique1": {
+          "name": "clients_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "c_nom",
+            "en_id"
+          ]
+        }
+      }
+    },
+    "public.entreprises": {
+      "name": "entreprises",
+      "schema": "",
+      "columns": {
+        "en_id": {
+          "name": "en_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "en_nom": {
+          "name": "en_nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "en_tel": {
+          "name": "en_tel",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "en_email": {
+          "name": "en_email",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "en_desc": {
+          "name": "en_desc",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_adr": {
+          "name": "en_adr",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_logo": {
+          "name": "en_logo",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "entreprises_unique1": {
+          "name": "entreprises_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "en_nom"
+          ]
+        },
+        "entreprises_unique2": {
+          "name": "entreprises_unique2",
+          "nullsNotDistinct": false,
+          "columns": [
+            "en_tel"
+          ]
+        },
+        "entreprises_unique3": {
+          "name": "entreprises_unique3",
+          "nullsNotDistinct": false,
+          "columns": [
+            "en_email"
+          ]
+        }
+      }
+    },
+    "public.fournisseurs": {
+      "name": "fournisseurs",
+      "schema": "",
+      "columns": {
+        "f_id": {
+          "name": "f_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "f_nom": {
+          "name": "f_nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "f_tel": {
+          "name": "f_tel",
+          "type": "varchar(25)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "f_adr": {
+          "name": "f_adr",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fournisseurs_fkey1": {
+          "name": "fournisseurs_fkey1",
+          "tableFrom": "fournisseurs",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "fournisseurs_unique1": {
+          "name": "fournisseurs_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "f_nom",
+            "en_id"
+          ]
+        }
+      }
+    },
+    "public.iphones": {
+      "name": "iphones",
+      "schema": "",
+      "columns": {
+        "i_id": {
+          "name": "i_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "i_barcode": {
+          "name": "i_barcode",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "i_instock": {
+          "name": "i_instock",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "m_id": {
+          "name": "m_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "iphones_fkey1": {
+          "name": "iphones_fkey1",
+          "tableFrom": "iphones",
+          "tableTo": "modeles",
+          "columnsFrom": [
+            "m_id"
+          ],
+          "columnsTo": [
+            "m_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "iphones_unique1": {
+          "name": "iphones_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "i_barcode",
+            "m_id"
+          ]
+        }
+      }
+    },
+    "public.modeles": {
+      "name": "modeles",
+      "schema": "",
+      "columns": {
+        "m_id": {
+          "name": "m_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "m_nom": {
+          "name": "m_nom",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "m_type": {
+          "name": "m_type",
+          "type": "varchar(25)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "m_qte": {
+          "name": "m_qte",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "m_prix": {
+          "name": "m_prix",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "m_memoire": {
+          "name": "m_memoire",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "modeles_fkey1": {
+          "name": "modeles_fkey1",
+          "tableFrom": "modeles",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "modeles_unique1": {
+          "name": "modeles_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "m_nom",
+            "m_type",
+            "m_memoire",
+            "en_id"
+          ]
+        }
+      }
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "sessionToken": {
+          "name": "sessionToken",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "u_prenom": {
+          "name": "u_prenom",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "u_nom": {
+          "name": "u_nom",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(5)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'admin'"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_fkey1": {
+          "name": "users_fkey1",
+          "tableFrom": "users",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_unique1": {
+          "name": "user_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        },
+        "users_unique1": {
+          "name": "users_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "u_prenom",
+            "u_nom"
+          ]
+        },
+        "users_unique2": {
+          "name": "users_unique2",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "users_unique3": {
+          "name": "users_unique3",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
+    },
+    "public.vcommandes": {
+      "name": "vcommandes",
+      "schema": "",
+      "columns": {
+        "vc_id": {
+          "name": "vc_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "vc_etat": {
+          "name": "vc_etat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "vc_qte": {
+          "name": "vc_qte",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "vc_prix": {
+          "name": "vc_prix",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "i_id": {
+          "name": "i_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "v_id": {
+          "name": "v_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "vcommandes_fkey1": {
+          "name": "vcommandes_fkey1",
+          "tableFrom": "vcommandes",
+          "tableTo": "iphones",
+          "columnsFrom": [
+            "i_id"
+          ],
+          "columnsTo": [
+            "i_id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        },
+        "vcommandes_fkey2": {
+          "name": "vcommandes_fkey2",
+          "tableFrom": "vcommandes",
+          "tableTo": "ventes",
+          "columnsFrom": [
+            "v_id"
+          ],
+          "columnsTo": [
+            "v_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "vcommandes_unique1": {
+          "name": "vcommandes_unique1",
+          "nullsNotDistinct": false,
+          "columns": [
+            "i_id",
+            "v_id"
+          ]
+        }
+      }
+    },
+    "public.ventes": {
+      "name": "ventes",
+      "schema": "",
+      "columns": {
+        "v_id": {
+          "name": "v_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "v_date": {
+          "name": "v_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "v_etat": {
+          "name": "v_etat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "c_id": {
+          "name": "c_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "en_id": {
+          "name": "en_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ventes_fkey1": {
+          "name": "ventes_fkey1",
+          "tableFrom": "ventes",
+          "tableTo": "clients",
+          "columnsFrom": [
+            "c_id"
+          ],
+          "columnsTo": [
+            "c_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        },
+        "ventes_fkey2": {
+          "name": "ventes_fkey2",
+          "tableFrom": "ventes",
+          "tableTo": "entreprises",
+          "columnsFrom": [
+            "en_id"
+          ],
+          "columnsTo": [
+            "en_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.vpaiements": {
+      "name": "vpaiements",
+      "schema": "",
+      "columns": {
+        "vp_id": {
+          "name": "vp_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "vp_date": {
+          "name": "vp_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vp_motif": {
+          "name": "vp_motif",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vp_montant": {
+          "name": "vp_montant",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vp_etat": {
+          "name": "vp_etat",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "v_id": {
+          "name": "v_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "i_id": {
+          "name": "i_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "vpaiements_fkey1": {
+          "name": "vpaiements_fkey1",
+          "tableFrom": "vpaiements",
+          "tableTo": "ventes",
+          "columnsFrom": [
+            "v_id"
+          ],
+          "columnsTo": [
+            "v_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        },
+        "vpaiements_fkey2": {
+          "name": "vpaiements_fkey2",
+          "tableFrom": "vpaiements",
+          "tableTo": "iphones",
+          "columnsFrom": [
+            "i_id"
+          ],
+          "columnsTo": [
+            "i_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
