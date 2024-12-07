@@ -96,6 +96,10 @@ export async function getSession() {
 
   const verif = await verifSession(JSON.parse(session) as string);
   if (!verif) return false; // return false not redirect (think like a api )
+ 
+
+  // increase performance cache user session
+
 
   const getId = (await decrypt(JSON.parse(session) as string)).id;
   const user = await db.query.users.findFirst({

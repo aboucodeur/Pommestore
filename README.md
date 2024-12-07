@@ -131,6 +131,8 @@ TACHES </br>
 
 Grow your apps keeps feedbacks !
 
+- Ameliorations de l'application avec l'utilisateur
+
 ## DEPLOY & PRODUCTION
 
 - Cloud provider : vercel/me

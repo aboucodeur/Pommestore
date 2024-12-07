@@ -72,7 +72,11 @@ export async function getModeles(filter: string) {
             ? isNull(modeles.deletedAt)
             : isNotNull(modeles.deletedAt),
         ),
-        orderBy: [asc(modeles.m_nom), asc(modeles.createdAt)],
+        orderBy: [
+          asc(modeles.m_nom),
+          asc(modeles.createdAt),
+          asc(modeles.updatedAt),
+        ],
       });
 
       return takeXata(getAll, "many");

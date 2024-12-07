@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "~/_components/ui/dropdown-menu";
 import { deleteModele } from "~/_lib/actions";
-import { urlsParams } from "~/_lib/utils";
+import { formatDateTime, urlsParams } from "~/_lib/utils";
 
 export const columns: ColumnDef<{
   createdAt: Date;
@@ -33,6 +33,31 @@ export const columns: ColumnDef<{
   m_memoire: number;
   deletedAt: Date | null;
 }>[] = [
+  {
+    id: "Date",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-start">
+          Date
+          <Button
+            variant={"ghost"}
+            className="p-0"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDownIcon className="ml-1 h-4" />
+          </Button>
+        </div>
+      );
+    },
+    accessorFn: (row) => row.createdAt,
+    cell: ({ row }) => {
+      return (
+        <div className="font-semibold">
+          {formatDateTime(row.getValue("Date")).split("T").join("  ")}
+        </div>
+      );
+    },
+  },
   {
     id: "Nom",
     header: ({ column }) => {
