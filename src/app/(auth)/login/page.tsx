@@ -54,7 +54,6 @@ export default function Page() {
                 id="username"
                 placeholder="Entrez votre nom d'utilisateur"
                 name="username"
-                defaultValue="abou"
                 autoFocus
               />
             </div>
