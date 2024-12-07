@@ -1,0 +1,672 @@
+Voici les etapes sur comment je fais mon crud !
+
+1. La creation du schema dans le fichier src/server/db/schema.ts
+
+export const produits = createTable(
+  "produit",
+  {
+    pr_id: serial("pr_id").primaryKey(),
+    pr_nom: varchar("pr_nom", { length: 100 }).notNull(),
+    pr_desc: varchar("pr_desc", { length: 256 }),
+    pr_prix: decimal("pr_prix", { precision: 10, scale: 2 }).notNull(),
+    en_id: integer("en_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (table) => ({
+    fk1: foreignKey({
+      name: "produits_fkey1",
+      columns: [table.en_id],
+      foreignColumns: [entreprises.en_id],
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  }),
+);
+
+export type Produits = typeof produits.$inferSelect;
+
+export const produitsRelations = relations(produits, ({ one }) => ({
+  entreprise: one(entreprises, {
+    fields: [produits.en_id],
+    references: [entreprises.en_id],
+  }),
+}));
+
+2. Les actions CRUD dans src/_lib/actions.ts
+
+"use server";
+
+const VALIDATE_ACTIONS = {
+  produit: zodA({
+    nom: z.string()
+      .min(2, "Le nom doit contenir au moins 2 caractères")
+      .max(100, "Le nom ne peut pas dépasser 100 caractères"),
+    desc: z.string()
+      .max(256, "La description ne peut pas dépasser 256 caractères")
+      .optional(),
+    prix: z.coerce
+      .number()
+      .min(0, "Le prix doit être positif")
+      .max(999999.99, "Prix trop élevé"),
+  }),
+}
+
+export async function addProduit(_prevState: unknown, formData: FormData) {
+  const session = await getSession();
+  if (!session) return guestError();
+
+  const data = {
+    nom: formData.get("nom") as string,
+    desc: formData.get("desc") as string,
+    prix: formData.get("prix") as string,
+
+  };
+
+  const validated =  validateZodData(VALIDATE_ACTIONS.produit, data,formData);
+  if (!validated.success) return {error : validated.error};
+
+  try {
+    await db.insert(produits).values({
+      pr_nom: data.nom,
+      pr_desc: data.desc ?? null,
+      pr_prix: data.prix,
+      en_id: session.en_id,
+    });
+
+    revalidatePath("/produits");
+    return { error: "" };
+  } catch (e) {
+    return {error: "Erreur lors de l'ajout du produit",};
+  }
+}
+
+export async function editProduit(_prevState: unknown, formData: FormData) {
+  const session = await getSession();
+  if (!session) return guestError();
+
+  const data = {
+    id: formData.get("id"),
+    nom: formData.get("nom"),
+    desc: formData.get("desc"),
+    prix: formData.get("prix"),
+  };
+
+  if (!isNumber(data.id)) return {error: "ID produit invalide",};
+
+  const validated =  validateZodData(VALIDATE_ACTIONS.produit, formData);
+  if (!validated.success) return {error: validated.error};
+
+  try {
+    await db
+      .update(produits)
+      .set({
+        pr_nom: data.nom,
+        pr_desc: data.desc ?? null,
+        pr_prix: data.prix,
+      })
+      .where(
+        and(
+          eq(produits.pr_id, Number(data.id)),
+          eq(produits.en_id, session.en_id)
+        )
+      );
+
+    revalidatePath("/produits");
+    return { error : "" };
+  } catch (error) {
+    return {error: "Erreur lors de la modification du produit"};
+  }
+}
+
+export async function deleteProduit(pr_id: string) {
+  const session = await getSession();
+  if (!session) throw guestError();
+
+  if (!isNumber(pr_id)) return {error: "ID produit invalide",};
+
+  try {
+    // si soft delete transformer le delete en update en modifiant deletedAt : new Date()
+    await db
+      .delete(produits)
+      .where(
+        and(
+          eq(produits.pr_id, Number(pr_id)),
+          eq(produits.en_id, Number(session.en_id))
+        )
+      );
+
+    revalidatePath("/produits");
+    return { error: "" };
+  } catch (error) {
+    return { error: "Erreur lors de la suppression du produit" };
+  }
+}
+
+3. La recuperation des donnees dans queries src/server/queries.ts
+export async function getProduits() {
+    const session = await getSession();
+    if (!session) return [];
+  
+    const getAll = await db.query.produits.findMany({
+      where: eq(produits.en_id, Number(session.en_id)),
+      orderBy: [asc(produits.pr_nom)],
+    });
+  
+    return takeXata(getAll, "many");
+  }
+
+4. Mise en place du data-table exemple : 
+
+a.src/app/(features)/produits/columns.tsx
+
+"use client";
+
+import { type ColumnDef } from "@tanstack/react-table";
+import { CircleFadingPlusIcon, EditIcon } from "lucide-react";
+import Link from "next/link";
+import { Button } from "~/_components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "~/_components/ui/dropdown-menu";
+import { deleteProduit } from "~/_lib/actions";
+import { urlsParams } from "~/_lib/utils";
+
+export const columns: ColumnDef<{
+  pr_id: number;
+  pr_nom: string;
+  pr_desc: string | null;
+  pr_prix: string;
+}>[] = [
+  {
+    id: "Nom",
+    header: "NOM",
+    accessorFn: (row) => row.pr_nom,
+    cell: ({ row }) => {
+      return <div className="font-semibold">{row.getValue("Nom")}</div>;
+    },
+  },
+  {
+    id: "Prix",
+    header: "PRIX",
+    accessorFn: (row) => row.pr_prix,
+    cell: ({ row }) => {
+      return (
+        <div className="font-bold">
+          {formatWari(row.getValue("Prix"), { minimumFractionDigits: 0 })}
+          <sup> F</sup>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    enableColumnFilter: false,
+    enableSorting: false,
+    header: () => {
+      return (
+        <Link href="/produits/add">
+          <Button size="default" className="h-7 rounded-full">
+            <CircleFadingPlusIcon className="mr-2 h-4 w-4" /> Produit
+          </Button>
+        </Link>
+      );
+    },
+    cell: ({ row }) => {
+      const produit = row.original;
+      const produitParams = urlsParams(produit, true, {
+        pr_id: "id",
+        pr_nom: "nom",
+        pr_desc: "desc",
+        pr_prix: "prix",
+      });
+
+      return (
+        <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-1 w-10 p-3">
+            <span className="sr-only">Ouvrir le menu</span>
+            <MoreHorizontal size={25} className="h-4 w-4 text-center" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <Link href={`/produits/edit/${produit.pr_id}?${produitParams}`}>
+            <DropdownMenuItem className="text-orange-400">
+              <EditIcon className="mr-1 h-4 w-4" /> Modifier
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem className="text-red-400">
+            <form
+              className="flex items-center"
+              action={async () => {
+                // not using formData .bind cause problem with typescript and first arg is null
+                await deleteProduit(produit.pr_id.toString());
+              }}
+              method="post"
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="m-0 h-4 w-full p-0"
+              >
+                <TrashIcon size={10} className="mr-1 h-4 w-4" /> Supprimer
+              </Button>
+            </form>
+          </DropdownMenuItem>
+          {/* </Link> */}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      );
+    },
+  },
+];
+
+b.src/app/(features)/produits/page.tsx
+import { Shell } from "~/_components/shell";
+import { getProduits } from "~/server/queries";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
+
+export default async function page() {
+  const produits = await getProduits();
+
+  return (
+    <Shell variant="default">
+      <h4 className="flex flex-wrap items-center justify-between text-xl font-semibold tracking-tight">
+        Produits
+      </h4>
+      <div className="w-full overflow-x-auto">
+        <div className="w-full overflow-auto">
+          <DataTable columns={columns} data={produits} />
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+c. src/app/(features)/produits/data-table.tsx
+"use client";
+
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import { Button } from "@components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@components/ui/table";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { useState } from "react";
+import DebouncedInput from "~/_components/ui/debouced-input";
+
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+}
+
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+}: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0, // Page par defaut
+    pageSize: 8, // Nombres d'elements par page
+  });
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  const table = useReactTable({
+    data,
+    columns,
+    // pageCount: data.length ?? 0,
+    getCoreRowModel: getCoreRowModel(), // like a configuration
+
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+
+    // onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
+    onPaginationChange: setPagination,
+    onRowSelectionChange: setRowSelection, // no core model
+    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      sorting,
+      pagination,
+      // columnFilters,
+      rowSelection,
+      globalFilter,
+    },
+  });
+
+  return (
+    <div className="p-1">
+      {/* Rechercher et Visibilite des colonnes */}
+      <div className="w-50 flex gap-1">
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value) => setGlobalFilter(String(value))}
+          placeholder="Recherche ici..."
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button
+              variant="outline"
+              className="ml-auto shadow-lg outline-none"
+            >
+              <EyeIcon className="mr-1 h-4 w-4" />
+              Colonnes
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => {
+                    column.toggleVisibility(!!value);
+                  }}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Table className="mt-2 rounded-lg border">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                Pas de resultats.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Table footer */}
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <p className="text-sm">
+          Select(s) : {table.getFilteredSelectedRowModel().rows.length}
+        </p>
+        <p className="text-sm">
+          Total(s) : {table.getFilteredRowModel().rows.length}
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          <ArrowLeftIcon className="h-4 w-4" /> Precedent
+        </Button>
+        <span className="font-bold text-black dark:text-white">
+          {table.getState().pagination.pageIndex + 1}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Suivant <ArrowRightIcon className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+
+5- Mise en place des modals
+
+a. src/app/@modals/(.)produits/add/page.tsx
+"use client";
+import { PlusCircleIcon } from "lucide-react";
+import { useFormState } from "react-dom";
+import { Modal } from "~/_components/modal";
+import { SubmitBtn } from "~/_components/modal-form/btn-pending";
+import { Input } from "~/_components/ui/input";
+import { useAutoFocus } from "~/_hooks/use-auto-focus";
+import { addProduit } from "~/_lib/actions";
+
+export default function Page() {
+  const focus = useAutoFocus<HTMLInputElement>();
+  const [state, action] = useFormState(addProduit, {
+    error: undefined as unknown as string,
+  });
+
+  return (
+    <Modal
+      modalTitle="Ajouter un produit"
+      modalState={state.error === ""}
+      withHeaderClose
+    >
+      <form action={action} className="mx-auto w-full md:w-96">
+        <div className="flex flex-col gap-3 p-3">
+          {state.error ? (
+            <div className="rounded-lg bg-red-500 p-3 text-white">
+              {state.error}
+            </div>
+          ) : null}
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="nom" className="text-sm font-medium">
+              Nom
+            </label>
+            <Input
+              ref={focus}
+              type="text"
+              name="nom"
+              id="nom"
+              className="rounded-lg border p-2"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="desc" className="text-sm font-medium">
+              Description
+            </label>
+            <Input
+              type="text"
+              name="desc"
+              id="desc"
+              className="rounded-lg border p-2"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="prix" className="text-sm font-medium">
+              Prix
+            </label>
+            <Input
+              type="number"
+              name="prix"
+              id="prix"
+              step="0.01"
+              className="rounded-lg border p-2"
+              required
+            />
+          </div>
+
+          <SubmitBtn
+            btnLabel={
+              <div className="flex items-center gap-1">
+                <PlusCircleIcon className="h-4 w-4" />
+                Soumettre
+              </div>
+            }
+          />
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+b.src/app/@modals/(.)produits/edit/[id]/page.tsx
+"use client";
+import { PlusCircleIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useFormState } from "react-dom";
+import { Modal } from "~/_components/modal";
+import { SubmitBtn } from "~/_components/modal-form/btn-pending";
+import { Input } from "~/_components/ui/input";
+import { useAutoFocus } from "~/_hooks/use-auto-focus";
+import { editProduit } from "~/_lib/actions";
+
+export default function Page({ params }: { params: { id: string } }) {
+  const focus = useAutoFocus<HTMLInputElement>();
+  const [state, action] = useFormState(editProduit, {
+    error: undefined as unknown as string,
+  });
+
+  const search = useSearchParams();
+
+  return (
+    <Modal
+      modalTitle="Modifier le produit"
+      modalState={state.error === ""}
+      withHeaderClose
+    >
+      <form action={action} className="mx-auto w-full md:w-96">
+        <input type="hidden" name="id" value={params.id} />
+
+        <div className="flex flex-col gap-3 p-3">
+          {state.error ? (
+            <div className="rounded-lg bg-red-500 p-3 text-white">
+              {state.error}
+            </div>
+          ) : null}
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="nom" className="text-sm font-medium">
+              Nom
+            </label>
+            <Input
+              ref={focus}
+              type="text"
+              name="nom"
+              id="nom"
+              defaultValue={search.get("nom") ?? ""}
+              className="rounded-lg border p-2"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="desc" className="text-sm font-medium">
+              Description
+            </label>
+            <Input
+              type="text"
+              name="desc"
+              id="desc"
+              defaultValue={search.get("desc") ?? ""}
+              className="rounded-lg border p-2"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="prix" className="text-sm font-medium">
+              Prix
+            </label>
+            <Input
+              type="number"
+              name="prix"
+              id="prix"
+              step="0.01"
+              defaultValue={search.get("prix") ?? ""}
+              className="rounded-lg border p-2"
+              required
+            />
+          </div>
+
+          <SubmitBtn
+            btnLabel={
+              <div className="flex items-center gap-1">
+                <PlusCircleIcon className="h-4 w-4" />
+                Soumettre
+              </div>
+            }
+          />
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+c. souvent aussi j'ajoute pour la suppression
+
+6. La creation de route handler si necessaire sa dependras de la fonctionnalites
+   dans src/app/api/someroutename/route.ts
+
+  export async function GET(req: Request) {
+  const membres = await getClubMembres();
+  return NextResponse.json(membres);
+}
+

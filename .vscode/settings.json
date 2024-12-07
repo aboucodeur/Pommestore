@@ -1,0 +1,15 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 100,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "NEXT JS DB",
+      "database": "ts_rnext",
+      "username": "abou",
+      "password": "abou@89"
+    }
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://<URL_HTTPS>/db/abou3_stack:main",
+  "codegen": {
+    "output": "src/server/db/xata.ts"
+  }
+}

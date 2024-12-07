@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+
+    /* Bundled projects */
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
+    "incremental": true,
+
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"], // change ~/ => @ like lib name sugar syntax
+      "@components/*": ["src/_components/*"], // mes composants
+      "@hooks/*": ["src/_hooks/*"], // mes hooks
+      "@lib/*": ["src/_lib/*"], // fonctions utilitaires
+      "@utils/*": ["src/_utils/*"],
+      "@providers/*": ["src/_providers/*"],
+      "@config/*": ["src/config/*"],
+      "@assets/*": ["src/assets/*"]
+    }
+  },
+  "include": [
+    ".eslintrc.cjs",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.js",
+    ".next/types/**/*.ts",
+    "src/env.mjs",
+    "prettier.config.mjs",
+    "src/scripts/seed.cjs"
+  ],
+  // "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next", ".drizzle", ".vscode"] // for more performance
+}

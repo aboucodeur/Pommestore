@@ -1,0 +1,22 @@
+// Utilisez ces ressources pour commencer à construire votre application... 🤖
+
+IA FIRST
+    - V0        : https://v0.new
+    - BOLT      : https://bolt.new
+    - REPLIT    : https://www.replit.com
+
+- Outils =   Next js 13.4 (app router), 
+            React js, Shadcn UI, Tailwind css, 
+            Postgresql, Drizzle orm, Typescript, Zod
+
+Description = Application de gestion
+
+Identifiant = entiers ou chaîne de caractères
+Profil : En tant que développeur expérimenté avec plusieurs années
+          d'expérience dans les technologies suivantes "[Outils]"
+          vous allez développer "[Description]".
+          En commençant par une résumé de l'idée et de votre compréhension
+          du sujet. Ensuite, nous allons commencer l'aspect technique avec :
+          - Implementation de la base de données en postgres (tables) avec les identifiants en "[Identifiant]"
+          - Réécriture en schéma Drizzle-orm
+          - Contraintes et relation entre les schémas
