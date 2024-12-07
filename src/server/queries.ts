@@ -350,6 +350,6 @@ export async function getDashboard() {
       return datas as unknown as DashboardType;
     },
     ["dashboard"],
-    { revalidate: 300 },
+    { revalidate: 120 }, // cache in 2 minutes
   )();
 }
