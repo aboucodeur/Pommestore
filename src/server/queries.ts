@@ -63,27 +63,27 @@ export async function getModeles(filter: string) {
   const session = await getSession();
   if (!session) return [];
 
-  return unstable_cache(
-    async () => {
-      const getAll = await db.query.modeles.findMany({
-        where: and(
-          eq(modeles.en_id, Number(session.en_id)),
-          filter === "all" || !filter
-            ? isNull(modeles.deletedAt)
-            : isNotNull(modeles.deletedAt),
-        ),
-        orderBy: [
-          asc(modeles.m_nom),
-          asc(modeles.createdAt),
-          asc(modeles.updatedAt),
-        ],
-      });
+  // return unstable_cache(
+  // async () => {
+  const getAll = await db.query.modeles.findMany({
+    where: and(
+      eq(modeles.en_id, Number(session.en_id)),
+      filter === "all" || !filter
+        ? isNull(modeles.deletedAt)
+        : isNotNull(modeles.deletedAt),
+    ),
+    orderBy: [
+      asc(modeles.m_nom),
+      asc(modeles.createdAt),
+      asc(modeles.updatedAt),
+    ],
+  });
 
-      return takeXata(getAll, "many");
-    },
-    ["modeles"],
-    { revalidate: 60 },
-  )();
+  return takeXata(getAll, "many");
+  // },
+  // ["modeles"],
+  // { revalidate: 60 },
+  // )();
 }
 
 // cache it
