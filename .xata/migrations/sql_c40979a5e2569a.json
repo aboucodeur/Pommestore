@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_c40979a5e2569a",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS bb_hk0lp6nkul60nde1qboqosqm8g_inu9u4_drizzle.__drizzle_migrations (id serial PRIMARY KEY, hash text NOT NULL, created_at bigint)"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_c40979a5e2569a",
+  "parent": "sql_5188903ee680fc",
+  "schema": "drizzle",
+  "startedAt": "2024-12-07T17:07:46.66769Z"
+}

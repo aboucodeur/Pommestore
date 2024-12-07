@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_f4a45b0ffbb73a",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS clients (c_id serial PRIMARY KEY NOT NULL, c_nom varchar(100) NOT NULL, c_tel varchar(25), c_adr varchar(200), c_type varchar(10) NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, en_id int NOT NULL, CONSTRAINT clients_unique1 UNIQUE (c_nom, en_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_f4a45b0ffbb73a",
+  "parent": "sql_617920037fdfe3",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:11.199126Z"
+}

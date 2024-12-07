@@ -287,7 +287,7 @@ export async function getDashboard() {
 
   const enId = session.en_id;
   const queries = {
-    qNbIphones: `SELECT SUM(m_qte) nb_stocks
+    qNbIphones: `SELECT coalesce(SUM(m_qte), 0) nb_stocks
                   FROM modeles 
                   WHERE en_id = ${enId} and deleted_at IS NULL`,
 

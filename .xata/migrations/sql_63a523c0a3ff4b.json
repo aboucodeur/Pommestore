@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_63a523c0a3ff4b",
+    "operations": [
+      {
+        "sql": {
+          "up": "DO $$BEGIN ALTER TABLE clients ADD CONSTRAINT clients_fkey1 FOREIGN KEY (en_id) REFERENCES bb_hk0lp6nkul60nde1qboqosqm8g_inu9u4.entreprises (en_id) ON UPDATE CASCADE; EXCEPTION \n WHEN duplicate_object THEN null;\n END$$"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_63a523c0a3ff4b",
+  "parent": "sql_0e39523cf226b9",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:23.063167Z"
+}

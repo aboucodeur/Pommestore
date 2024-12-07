@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_76894f38aa0f6c",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS iphones (i_id serial PRIMARY KEY NOT NULL, i_barcode varchar(100) NOT NULL, i_instock smallint DEFAULT 1 NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, m_id int NOT NULL, CONSTRAINT iphones_unique1 UNIQUE (i_barcode, m_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_76894f38aa0f6c",
+  "parent": "sql_56fe0a82d1ea18",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:14.174148Z"
+}

@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_bb7157d8ce8057",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS achats (a_id serial PRIMARY KEY NOT NULL, a_date timestamp with time zone DEFAULT now() NOT NULL, a_etat smallint DEFAULT 0 NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, f_id int NOT NULL, en_id int NOT NULL)"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_bb7157d8ce8057",
+  "parent": "mig_cta7mhu1ccglq2sph760",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:09.702712Z"
+}

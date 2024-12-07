@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_c926c29fb9b8f3",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS entreprises (en_id serial PRIMARY KEY NOT NULL, en_nom varchar(100) NOT NULL, en_tel varchar(45) NOT NULL, en_email varchar(100) NOT NULL, en_desc varchar(256), en_adr varchar(256), en_logo varchar(256), created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, CONSTRAINT entreprises_unique1 UNIQUE (en_nom), CONSTRAINT entreprises_unique2 UNIQUE (en_tel), CONSTRAINT entreprises_unique3 UNIQUE (en_email))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_c926c29fb9b8f3",
+  "parent": "sql_f4a45b0ffbb73a",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:12.175774Z"
+}

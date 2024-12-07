@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_617920037fdfe3",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS acommandes (ac_id serial PRIMARY KEY NOT NULL, ac_etat int DEFAULT 0 NOT NULL, ac_qte numeric(15, 2) DEFAULT '0' NOT NULL, ac_prix numeric(15, 2) DEFAULT '0' NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, i_id int NOT NULL, a_id int NOT NULL, CONSTRAINT acommandes_unique1 UNIQUE (i_id, a_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_617920037fdfe3",
+  "parent": "sql_bb7157d8ce8057",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:10.423274Z"
+}

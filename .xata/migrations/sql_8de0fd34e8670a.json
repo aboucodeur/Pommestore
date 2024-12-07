@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_8de0fd34e8670a",
+    "operations": [
+      {
+        "sql": {
+          "up": "DO $$BEGIN ALTER TABLE acommandes ADD CONSTRAINT acommandes_fkey1 FOREIGN KEY (i_id) REFERENCES bb_hk0lp6nkul60nde1qboqosqm8g_inu9u4.iphones (i_id) ON UPDATE CASCADE ON DELETE SET NULL; EXCEPTION \n WHEN duplicate_object THEN null;\n END$$"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_8de0fd34e8670a",
+  "parent": "sql_3801e6c4aa25b2",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:21.945249Z"
+}

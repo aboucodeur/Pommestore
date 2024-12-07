@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_fb59846cb0003f",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS vpaiements (vp_id serial PRIMARY KEY NOT NULL, vp_date timestamp with time zone NOT NULL, vp_motif varchar(200) NOT NULL, vp_montant int NOT NULL, vp_etat smallint DEFAULT 0 NOT NULL, v_id int NOT NULL, i_id int NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone)"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_fb59846cb0003f",
+  "parent": "sql_b6fe13e76f8b41",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:19.897957Z"
+}

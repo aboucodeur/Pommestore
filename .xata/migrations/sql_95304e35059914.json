@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_95304e35059914",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS vcommandes (vc_id serial PRIMARY KEY NOT NULL, vc_etat int DEFAULT 0 NOT NULL, vc_qte numeric(15, 2) DEFAULT '0' NOT NULL, vc_prix numeric(15, 2) DEFAULT '0' NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, i_id int NOT NULL, v_id int NOT NULL, CONSTRAINT vcommandes_unique1 UNIQUE (i_id, v_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_95304e35059914",
+  "parent": "sql_e9e0437cc734dc",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:17.955385Z"
+}

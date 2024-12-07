@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_56fe0a82d1ea18",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS fournisseurs (f_id serial PRIMARY KEY NOT NULL, f_nom varchar(100) NOT NULL, f_tel varchar(25), f_adr varchar(200), created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, en_id int NOT NULL, CONSTRAINT fournisseurs_unique1 UNIQUE (f_nom, en_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_56fe0a82d1ea18",
+  "parent": "sql_c926c29fb9b8f3",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:13.290666Z"
+}

@@ -1,5 +1,5 @@
 {
-  "databaseURL": "https://Aboubacar-Barry-s-workspace-inu9u4.us-east-1.xata.sh/db/dbiphonesapp2:main",
+  "databaseURL": "https://Aboubacar-Barry-s-workspace-inu9u4.us-east-1.xata.sh/db/dbiphonesapp2",
   "codegen": {
     "output": "src/server/db/xata.ts"
   }

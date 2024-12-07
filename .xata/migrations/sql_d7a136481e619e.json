@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_d7a136481e619e",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS modeles (m_id serial PRIMARY KEY NOT NULL, m_nom varchar(60) NOT NULL, m_type varchar(25) NOT NULL, m_qte int DEFAULT 0 NOT NULL, m_prix numeric(15, 2) DEFAULT '0' NOT NULL, m_memoire smallint NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, deleted_at timestamp with time zone, en_id int NOT NULL, CONSTRAINT modeles_unique1 UNIQUE (m_nom, m_type, m_memoire, en_id))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_d7a136481e619e",
+  "parent": "sql_76894f38aa0f6c",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:14.983063Z"
+}

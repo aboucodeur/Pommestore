@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_e9e0437cc734dc",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS users (id text PRIMARY KEY NOT NULL, u_prenom varchar(60) NOT NULL, u_nom varchar(30) NOT NULL, role varchar(5) DEFAULT 'admin', email text, \"emailVerified\" timestamp, image text, name text NOT NULL, password varchar(200) NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone, en_id int NOT NULL, CONSTRAINT user_unique1 UNIQUE (email), CONSTRAINT users_unique1 UNIQUE (u_prenom, u_nom), CONSTRAINT users_unique2 UNIQUE (name), CONSTRAINT users_unique3 UNIQUE (email))"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_e9e0437cc734dc",
+  "parent": "sql_9043a4b8551a34",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:17.056577Z"
+}

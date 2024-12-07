@@ -145,7 +145,7 @@ importers:
         specifier: ^8.56.10
         version: 8.56.11
       '@types/node':
-        specifier: ^20.14.10
+        specifier: ^20.14.13
         version: 20.14.13
       '@types/pg':
         specifier: ^8.11.10
@@ -190,7 +190,7 @@ importers:
         specifier: ^3.4.3
         version: 3.4.7
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
 packages:

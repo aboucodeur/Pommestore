@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_9043a4b8551a34",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE TABLE IF NOT EXISTS sessions (\"sessionToken\" text PRIMARY KEY NOT NULL, \"userId\" text NOT NULL, expires timestamp NOT NULL)"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_9043a4b8551a34",
+  "parent": "sql_d7a136481e619e",
+  "schema": "public",
+  "startedAt": "2024-12-07T17:07:15.911092Z"
+}
