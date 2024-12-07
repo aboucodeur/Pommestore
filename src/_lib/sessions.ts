@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { sessions, users } from "~/server/db/schema";
+import { unstable_cache } from "./unstable-cache";
 
 const sessConfig = {
   name: "a3_sess_id",
@@ -96,17 +97,22 @@ export async function getSession() {
 
   const verif = await verifSession(JSON.parse(session) as string);
   if (!verif) return false; // return false not redirect (think like a api )
- 
 
-  // increase performance cache user session
-
-
-  const getId = (await decrypt(JSON.parse(session) as string)).id;
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, getId),
-  }); // hot updated user info
-  if (!user) return false;
-  return user;
+  /**
+   * increase performance and reduce concurent connection !
+   */
+  return unstable_cache(
+    async () => {
+      const getId = (await decrypt(JSON.parse(session) as string)).id;
+      const user = await db.query.users.findFirst({
+        where: eq(users.id, getId),
+      }); // hot updated user info
+      if (!user) return false;
+      return user;
+    },
+    ["session"],
+    { revalidate: 600 }, // minutes
+  )();
 }
 
 async function verifSession(session: string) {
