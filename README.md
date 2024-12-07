@@ -116,13 +116,14 @@ TACHES </br>
   J'ai pus le faire malgrer les contraintes
 
 - [*] Ameliorations des perfs de l'application !
+
   - Mettre en cache les requetes => avec unstable_cache
   - Reduire les jointures sql si necessaires ou creer des index sur les tables
   - Creation de triggers
 
-- [ ] Confronter l'application au marche (deploiement en production)
-    1. Creation du repo github
-    2. Creation de la base de donnees xata
+- [ ] Deploy en production
+  1. Creation du repo github
+  2. Creation de la base de donnees xata
 
 <!-- - [ ] Gestion des prix et paiements si necessaires -->
 
