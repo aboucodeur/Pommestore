@@ -20,7 +20,7 @@ export const env = createEnv({
     XATA_POSTGRES_URL: z.string(),
     XATA_BRANCH: z.string().default("XATA_BRANCH"),
     XATA_POSTGRES_URL_HTTPS: z.string(),
-    SENTRY_AUTH_TOKEN: z.string(),
+    // SENTRY_AUTH_TOKEN: z.string(),
   },
 
   /**
@@ -52,7 +52,7 @@ export const env = createEnv({
     XATA_POSTGRES_URL_HTTPS: process.env.XATA_POSTGRES_URL_HTTPS,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+    // SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

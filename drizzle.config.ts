@@ -5,7 +5,7 @@ export default {
   schema: "./src/server/db/schema.ts", // all tables
   out: "./.drizzle",
   dialect: "postgresql",
-  //  env.NODE_ENV === "production" ?
+  //  env.NODE_ENV === "production" ? 
   dbCredentials: { url: env.XATA_POSTGRES_URL  },
   tablesFilter: ["*"],
   verbose: true,
