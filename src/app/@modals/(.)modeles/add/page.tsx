@@ -46,14 +46,13 @@ export default function AddModele() {
             </div>
 
             <div className="relative w-full">
-              {/* <BoxSelectIcon className="absolute left-0 top-0 m-3 h-4 w-4 text-muted-foreground" /> */}
               <Select
                 // className="pl-9"
                 name="type"
                 required
                 defaultValue="Simple"
               >
-                <SelectTrigger className="ml-2 border p-2 pl-9 shadow-lg">
+                <SelectTrigger className="border p-2 shadow-lg">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
