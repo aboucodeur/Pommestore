@@ -1,6 +1,6 @@
 "use server";
 
-import { and, asc, eq, isNotNull, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { getSession } from "~/_lib/sessions";
 import { unstable_cache } from "~/_lib/unstable-cache";
 import { guestError, takeXata } from "~/_lib/utils";
@@ -262,6 +262,32 @@ export async function getIphonesInfos(barcode: string) {
     .then((res) => res.filter((d) => d.modele.en_id === session.en_id));
 
   return takeXata(getIphones, "many");
+}
+
+// recuperations des iphones avec leur modeles
+export async function getAllIphones() {
+  const session = await getSession();
+  if (!session) return [];
+
+  const getAll = await db.query.iphones.findMany({
+    where: (iphones, { eq }) => eq(iphones.i_instock, 1), // seulement les iphones disponibles
+    with: {
+      modele: {
+        columns: {
+          m_nom: true,
+          m_type: true,
+          m_memoire: true,
+          en_id: true,
+        },
+      },
+    },
+    orderBy: [desc(iphones.createdAt), desc(iphones.i_instock)],
+  });
+
+  return takeXata(
+    getAll.filter((d) => d.modele.en_id === session.en_id),
+    "many",
+  );
 }
 
 // Tableaux de bord de l'application

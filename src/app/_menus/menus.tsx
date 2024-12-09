@@ -1,4 +1,5 @@
 import {
+  ArrowLeftRightIcon,
   HomeIcon,
   PackageMinusIcon,
   PackagePlus,
@@ -59,6 +60,11 @@ const APP_MENUS: { root: LinksType[]; user: LinksType[] } = {
       link: "/clients",
       label: "Clients",
       icon: <UserIcon className="h-4 w-4" />,
+    },
+    {
+      link: "/retours",
+      label: "Retours",
+      icon: <ArrowLeftRightIcon className="h-4 w-4" />,
     },
     {
       link: "/fournisseurs",

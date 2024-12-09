@@ -1,6 +1,6 @@
 "use client";
 
-import { AppleIcon, CoinsIcon } from "lucide-react";
+import { AppleIcon, BoxSelectIcon, CoinsIcon, HardDrive } from "lucide-react";
 import { useFormState } from "react-dom";
 import { Modal } from "~/_components/modal";
 import { SubmitBtn } from "~/_components/modal-form/btn-pending";
@@ -46,13 +46,9 @@ export default function AddModele() {
             </div>
 
             <div className="relative w-full">
-              <Select
-                // className="pl-9"
-                name="type"
-                required
-                defaultValue="Simple"
-              >
-                <SelectTrigger className="border p-2 shadow-lg">
+              <BoxSelectIcon className="absolute left-0 top-0 m-3 h-4 w-4 text-muted-foreground" />
+              <Select name="type" required defaultValue="Simple">
+                <SelectTrigger className="border p-2 pl-9 shadow-lg">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -88,20 +84,23 @@ export default function AddModele() {
           </div>
 
           <div className="relative w-full">
-            <Label
-              className="absolute left-0 top-0 m-3 h-4 w-4 text-muted-foreground"
-              htmlFor="memoire"
-            >
-              Go
-            </Label>
-            <Input
-              className="pl-9"
-              id="memoire"
-              name="memoire"
-              type="number"
-              defaultValue={128}
-              required
-            />
+            <HardDrive className="absolute left-0 top-0 m-3 h-4 w-4 text-muted-foreground" />
+            <Select name="memoire" required defaultValue="128">
+              <SelectTrigger className="border p-2 pl-9">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="8">8 Go</SelectItem>
+                <SelectItem value="16">16 Go</SelectItem>
+                <SelectItem value="32">32 Go</SelectItem>
+                <SelectItem value="64">64 Go</SelectItem>
+                <SelectItem value="128">128 Go</SelectItem>
+                <SelectItem value="256">256 Go</SelectItem>
+                <SelectItem value="512">512 Go</SelectItem>
+                <SelectItem value="1000">1 To</SelectItem>
+                <SelectItem value="2000">2 To</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

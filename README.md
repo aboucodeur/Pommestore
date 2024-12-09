@@ -121,17 +121,30 @@ TACHES </br>
   - Reduire les jointures sql si necessaires ou creer des index sur les tables
   - Creation de triggers
 
-- [ ] Deploy en production
+- [*] Deploy en production
+
   1. Creation du repo github
   2. Creation de la base de donnees xata
+     Sa pas eter facile la mise en place de la
+     base de donnee mais c'est ok.
 
-<!-- - [ ] Gestion des prix et paiements si necessaires -->
+- [ ] Ajouter la gestion des prix si necessaires (depend des retours utilisateurs !)
+
 
 ## FEEDBACKS 🛟
 
 Grow your apps keeps feedbacks !
 
-- Ameliorations de l'application avec l'utilisateur
+- [*] Creation de la base de donnees sur mon vps
+- [*] Ameliorer le design des formulaires en ajoutant des icones !
+- [*] Retours grouper des iphones - L'utilisateur vas chosir la liste des iphones a retirer du
+      stock par un checkbox en recuperant les i_id des iphones
+
+- [*] ELEMENTS RESERVES DE L"APPLICATION : (PROTEGER CONTRE DE LA SUPPRESSION)
+  - ENTREES => Fournisseurs fait entrer les iphones dans le stocks
+  - SORTIES => Clients fait sortir les iphones dans le stocks
+  - RETOURS => Retire les iphones de maniere grouper dans le stocks
+    tout en gardant l'historique en sauvegardant comme ventes
 
 ## DEPLOY & PRODUCTION
 
@@ -187,6 +200,7 @@ ALTER TABLE users ADD CONSTRAINT users_unique1 UNIQUE (u_prenom, u_nom),
 - Modal => fermer via url ou du javascript dom classique
 - formatDateTime
 - urlsParams prend en charge les dates
+- Mise en place de la base de donnees sur mon vps !
 
 - Way to using server action
 - - like some question

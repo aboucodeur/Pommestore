@@ -1,7 +1,12 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { CircleFadingPlusIcon, EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import {
+  CircleFadingPlusIcon,
+  EditIcon,
+  MoreHorizontal,
+  TrashIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/_components/ui/button";
 import {
@@ -67,7 +72,11 @@ export const columns: ColumnDef<{
         f_adr: "adr",
       });
 
-      return (
+      return ["ENTREES"].includes(fournisseur.f_nom.trim().toUpperCase()) ? (
+        <span className="badge badge-primary badge-md font-semibold">
+          RESERVER
+        </span>
+      ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-1 w-10 p-3">
@@ -77,7 +86,9 @@ export const columns: ColumnDef<{
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/fournisseurs/edit/${row.original.f_id}${fournisseurParams}`}>
+            <Link
+              href={`/fournisseurs/edit/${row.original.f_id}${fournisseurParams}`}
+            >
               <DropdownMenuItem className="text-orange-400">
                 <EditIcon className="mr-1 h-4 w-4" /> Modifier
               </DropdownMenuItem>

@@ -1,7 +1,12 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { CircleFadingPlusIcon, EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import {
+  CircleFadingPlusIcon,
+  EditIcon,
+  MoreHorizontal,
+  TrashIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/_components/ui/button";
 import {
@@ -78,42 +83,48 @@ export const columns: ColumnDef<{
         c_type: "type",
       });
 
-      return (
+      return ["RETOURS", "SORTIES"].includes(
+        client.c_nom.trim().toUpperCase(),
+      ) ? (
+        <span className="badge badge-primary badge-md font-semibold">
+          RESERVER
+        </span>
+      ) : (
         <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-1 w-10 p-3">
-            <span className="sr-only">Ouvrir le menu</span>
-            <MoreHorizontal size={25} className="h-4 w-4 text-center" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <Link href={`/clients/edit/${row.original.c_id}${clientParams}`}>
-            <DropdownMenuItem className="text-orange-400">
-              <EditIcon className="mr-1 h-4 w-4" /> Modifier
-            </DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem className="text-red-400">
-            <form
-              className="flex items-center"
-              action={async () => {
-                // not using formData .bind cause problem with typescript and first arg is null
-                await deleteClient(client.c_id.toString());
-              }}
-              method="post"
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="m-0 h-4 w-full p-0"
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-1 w-10 p-3">
+              <span className="sr-only">Ouvrir le menu</span>
+              <MoreHorizontal size={25} className="h-4 w-4 text-center" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Link href={`/clients/edit/${row.original.c_id}${clientParams}`}>
+              <DropdownMenuItem className="text-orange-400">
+                <EditIcon className="mr-1 h-4 w-4" /> Modifier
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem className="text-red-400">
+              <form
+                className="flex items-center"
+                action={async () => {
+                  // not using formData .bind cause problem with typescript and first arg is null
+                  await deleteClient(client.c_id.toString());
+                }}
+                method="post"
               >
-                <TrashIcon size={10} className="mr-1 h-4 w-4" /> Supprimer
-              </Button>
-            </form>
-          </DropdownMenuItem>
-          {/* </Link> */}
-        </DropdownMenuContent>
-      </DropdownMenu>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="m-0 h-4 w-full p-0"
+                >
+                  <TrashIcon size={10} className="mr-1 h-4 w-4" /> Supprimer
+                </Button>
+              </form>
+            </DropdownMenuItem>
+            {/* </Link> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

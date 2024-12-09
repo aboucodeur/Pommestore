@@ -33,13 +33,26 @@ export const columns: ColumnDef<{
 }>[] = [
   {
     id: "Date",
-    header: "DATE",
-    accessorFn: (row) => row.v_date,
+    accessorFn: (row) => row.v_date.getTime(),
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-start">
+          État
+          <Button
+            variant={"ghost"}
+            className="p-0"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDownIcon className="ml-1 h-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       return (
         <div className="font-medium">
           {/* avec donne moi avec un a absent en haut :   */}
-          {formatDateTime(row.getValue("Date")).split("T").join("  ")}
+          {formatDateTime(row.original.v_date).split("T").join("  ")}
         </div>
       );
     },

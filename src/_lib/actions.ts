@@ -336,6 +336,7 @@ export async function addModele(_prevState: unknown, formData: FormData) {
     revalidatePath("/modeles");
     return { error: "" };
   } catch (e) {
+    console.log(e);
     return { error: "Erreur lors de l'ajout du modèle" };
   }
 }
@@ -414,12 +415,12 @@ export async function deleteModele(m_id: string) {
   }
 }
 
-export async function restoreModele(m_id : string) {
+export async function restoreModele(m_id: string) {
   try {
-  const session = await getSession();
-  if (!session) throw guestError();
+    const session = await getSession();
+    if (!session) throw guestError();
 
-  if (!isNumber(m_id)) return { error: "ID modèle invalide" };
+    if (!isNumber(m_id)) return { error: "ID modèle invalide" };
 
     // Soft delete du modèle
     await db
@@ -430,7 +431,7 @@ export async function restoreModele(m_id : string) {
       );
     revalidatePath("/modeles");
     return { error: "" };
-  } catch  {
+  } catch {
     return { error: "Erreur lors de la restauration du modèle" };
   }
 }
@@ -975,5 +976,88 @@ export async function validateCommandeAchat(a_id: string) {
     return { error: "" };
   } catch {
     return { error: "Erreur lors de la validation de la commande d'achat" };
+  }
+}
+
+// ----> USER FEEDBACK
+
+// Retours grouper des iphones !
+export async function addRetour(codes: (string | undefined)[]) {
+  const session = await getSession();
+  if (!session) return guestError();
+
+  const ids = codes;
+
+  if (!ids || ids.length < 1) return { error: "IMEI invalide" };
+
+  try {
+    return await db.transaction(async (tx) => {
+      // 1) chercher le client => RETOURS
+      const client = await tx.query.clients.findFirst({
+        where: and(
+          eq(clients.c_nom, "RETOURS"),
+          eq(clients.en_id, session.en_id),
+        ),
+      });
+      if (!client)
+        return {
+          error: "Retours non configuré veuillez ajouter le client RETOURS",
+        };
+
+      //2) Créer la vente
+      const [newVente] = await tx
+        .insert(ventes)
+        .values({
+          c_id: client.c_id,
+          en_id: session.en_id,
+          v_etat: 1, // valider la vente
+        })
+        .returning({
+          v_id: ventes.v_id,
+          v_date: ventes.v_date,
+        });
+
+      //3) Ajouter les iphones a la commande
+      if (newVente)
+        await tx.insert(vcommandes).values(
+          ids.map((ip_id) => ({
+            v_id: newVente.v_id,
+            i_id: Number(ip_id),
+            vc_etat: 1, // valider la commande
+          })),
+        );
+
+      //4) Mise a jour du stock
+      for (const ip_id of ids) {
+        await tx
+          .update(iphones)
+          .set({ i_instock: 0 })
+          .where(eq(iphones.i_id, Number(ip_id)));
+
+        const iphone = await tx.query.iphones.findFirst({
+          where: eq(iphones.i_id, Number(ip_id)),
+          with: {
+            modele: {
+              columns: {
+                m_id: true,
+                m_qte: true,
+              },
+            },
+          },
+        });
+
+        if (iphone)
+          await tx
+            .update(modeles)
+            .set({ m_qte: iphone.modele.m_qte - 1 })
+            .where(eq(modeles.m_id, iphone.modele.m_id));
+      }
+
+      revalidatePath("/retours");
+      revalidatePath("/");
+      return { error: "" };
+    });
+  } catch (e) {
+    return { error: "Erreur lors du sorties grouper !" };
   }
 }

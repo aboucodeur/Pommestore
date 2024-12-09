@@ -100,6 +100,7 @@ export async function getSession() {
 
   /**
    * increase performance and reduce concurent connection !
+   * - cache is cool need to revalidate => don't forget !
    */
   return unstable_cache(
     async () => {
@@ -122,10 +123,3 @@ async function verifSession(session: string) {
   if (!getSession || new Date() > new Date(getSession.expires)) return false;
   return true;
 }
-
-// export async function guestError(
-//     message?: string,
-//     rest?: Record<string, unknown>
-// ) {
-//     return { error: message ?? "Vous devez être connecté !", ...rest }
-// }
