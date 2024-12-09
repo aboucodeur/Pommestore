@@ -13,6 +13,7 @@ import {
 } from "@components/ui/table";
 import { Calendar, HardDrive, Search, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { cn, formatDateTime } from "~/_lib/utils";
 import { Button } from "./ui/button";
 
@@ -36,8 +37,12 @@ type IphoneSearchProps = {
       createdAt: Date;
       vc_etat?: number | undefined;
       vente: {
+        v_id: number;
+        v_date: Date;
         client: {
           c_nom: string;
+          c_id: number;
+          en_id: number;
         };
       };
     }[];
@@ -164,6 +169,7 @@ export default function IphoneSearch(props: IphoneSearchProps) {
                         <TableHead className="w-[180px]">Date</TableHead>
                         <TableHead>Client</TableHead>
                         <TableHead className="w-[100px]">Statut</TableHead>
+                        <TableHead>Details</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -194,6 +200,14 @@ export default function IphoneSearch(props: IphoneSearchProps) {
                                   ? "Rendu"
                                   : "En cours"}
                             </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            <Link
+                              className="flex items-center gap-2 text-primary"
+                              href={`/ventes/${order.vente.v_id}?id=${order.vente.v_id}&v_date=${formatDateTime(order.vente.v_date)}&c_nom=${order.vente.client.c_nom}&c_id=${order.vente.client.c_id}&en_id=${order.vente.client.en_id}`}
+                            >
+                              Voir vente
+                            </Link>
                           </TableCell>
                         </TableRow>
                       ))}

@@ -191,15 +191,3 @@ CREATE OR REPLACE TRIGGER trigger_delete_iphone
     BEFORE DELETE ON iphones
     FOR EACH ROW
     EXECUTE FUNCTION delete_iphone_related();
-
-
-
-
-select "iphones"."i_id", "iphones"."i_barcode", "iphones"."i_instock", "iphones"."created_at", "iphones"."updated_at", "iphones"."deleted_at", "iphones"."m_id", "iphones_modele"."data" as "modele" 
-    from "iphones" 
-    left join lateral (select json_build_array("iphones_modele"."m_nom", "iphones_modele"."m_type", "iphones_modele"."m_memoire", "iphones_modele"."en_id") as "data" 
-    from (select * from "modeles" "iphones_modele" where "iphones_modele"."m_id" = "iphones"."m_id" limit $1) "iphones_modele") "iphones_modele" on true order by "iphones"."created_at" desc, "iphones"."i_instock" desc
-
-
-
-select "iphones"."i_id", "iphones"."i_barcode", "iphones"."i_instock", "iphones"."created_at", "iphones"."updated_at", "iphones"."deleted_at", "iphones"."m_id", "iphones_modele"."data" as "modele" from "iphones" left join lateral (select json_build_array("iphones_modele"."m_nom", "iphones_modele"."m_type", "iphones_modele"."m_memoire", "iphones_modele"."en_id") as "data" from (select * from "modeles" "iphones_modele" where "iphones_modele"."m_id" = "iphones"."m_id" limit 100) "iphones_modele") "iphones_modele" on true order by "iphones"."created_at" desc, "iphones"."i_instock" desc;

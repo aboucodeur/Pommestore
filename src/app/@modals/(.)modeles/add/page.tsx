@@ -1,6 +1,7 @@
 "use client";
 
 import { AppleIcon, BoxSelectIcon, CoinsIcon, HardDrive } from "lucide-react";
+import { useState } from "react";
 import { useFormState } from "react-dom";
 import { Modal } from "~/_components/modal";
 import { SubmitBtn } from "~/_components/modal-form/btn-pending";
@@ -13,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/_components/ui/select";
+import { Switch } from "~/_components/ui/switch";
 import { Textarea } from "~/_components/ui/textarea";
 import { useAutoFocus } from "~/_hooks/use-auto-focus";
 import { addModele } from "~/_lib/actions";
@@ -22,6 +24,7 @@ export default function AddModele() {
     error: undefined as unknown as string,
   });
   const focus = useAutoFocus<HTMLInputElement>();
+  const [isArrivage, setIsArrivage] = useState(false);
 
   return (
     <Modal
@@ -120,6 +123,20 @@ export default function AddModele() {
                 return e.key !== "Enter";
               }}
               // onInput={() => updateCount()}
+            />
+          </div>
+
+          {/* hidden input for  */}
+          {!isArrivage ? (
+            <input type="hidden" name="classe" value="CARTONS" />
+          ) : (
+            <input type="hidden" name="classe" value="ARRIVAGES" />
+          )}
+          <div className="flex items-center gap-2">
+            <Label>Arrivages</Label>
+            <Switch
+              checked={isArrivage}
+              onCheckedChange={(e) => setIsArrivage(e)}
             />
           </div>
 

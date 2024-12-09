@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "~/_components/ui/dropdown-menu";
 import { deleteModele } from "~/_lib/actions";
-import { formatDateTime, urlsParams } from "~/_lib/utils";
+import { cn, formatDateTime, urlsParams } from "~/_lib/utils";
 
 export const columns: ColumnDef<{
   createdAt: Date;
@@ -28,6 +28,7 @@ export const columns: ColumnDef<{
   m_id: number;
   m_nom: string;
   m_type: string;
+  m_classe: string;
   m_qte: number;
   m_prix: string;
   m_memoire: number;
@@ -77,6 +78,38 @@ export const columns: ColumnDef<{
     accessorFn: (row) => `${row.m_nom} ${row.m_type} ${row.m_memoire} Go`,
     cell: ({ row }) => {
       return <div className="font-semibold">{row.getValue("Nom")}</div>;
+    },
+  },
+  {
+    id: "classe",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-start">
+          Classe
+          <Button
+            variant={"ghost"}
+            className="p-0"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDownIcon className="ml-1 h-4" />
+          </Button>
+        </div>
+      );
+    },
+    accessorFn: (row) => row.m_classe,
+    cell: ({ row }) => {
+      return (
+        <span
+          className={cn(
+            "badge badge-xs p-2 font-semibold",
+            row.getValue("classe") === "CARTONS"
+              ? "badge-primary"
+              : "badge-error"
+          )}
+        >
+          {row.getValue("classe")}
+        </span>
+      );
     },
   },
   {

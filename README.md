@@ -6,6 +6,7 @@ App is => ui (hard and soft) + data (api, database) + mutation (validation)
 MOTIVATION : 🛹 => 🛴 => 🏎️ ! (Code less ship more)
 Date debut : 03/12/2024 => Re-ecriture de l'application ! vers 18 Heures ~ 22 Heures
 V1 : 07/12/2024 a 3H15 => 06/12/2024 (update and fix)
+V2 : 09/12/2024 a 3H46 => Correction de bugs et repondre aux feedbacks utilisateurs ok !
 
 Je dois ship rapidement cet application !
 parceque je sens de l'argent la dans
@@ -130,7 +131,6 @@ TACHES </br>
 
 - [ ] Ajouter la gestion des prix si necessaires (depend des retours utilisateurs !)
 
-
 ## FEEDBACKS 🛟
 
 Grow your apps keeps feedbacks !
@@ -138,13 +138,21 @@ Grow your apps keeps feedbacks !
 - [*] Creation de la base de donnees sur mon vps
 - [*] Ameliorer le design des formulaires en ajoutant des icones !
 - [*] Retours grouper des iphones - L'utilisateur vas chosir la liste des iphones a retirer du
-      stock par un checkbox en recuperant les i_id des iphones
+  stock par un checkbox en recuperant les i_id des iphones
 
 - [*] ELEMENTS RESERVES DE L"APPLICATION : (PROTEGER CONTRE DE LA SUPPRESSION)
+
   - ENTREES => Fournisseurs fait entrer les iphones dans le stocks
   - SORTIES => Clients fait sortir les iphones dans le stocks
   - RETOURS => Retire les iphones de maniere grouper dans le stocks
     tout en gardant l'historique en sauvegardant comme ventes
+
+09/12/2024 --> dans le bureaux !
+
+- [*] Voir dans quelle vente l'iphone a ete vendu (tres important !)
+- [*] Gestion des iphones de type arrivages => m_classe
+- [*] Si le modele existe ajouter directement au stock (facilte aussi la tache de l'utilisateur )
+- [ ] Gestion arrivages lors de l'entree des commandes d'achat
 
 ## DEPLOY & PRODUCTION
 

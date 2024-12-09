@@ -73,6 +73,7 @@ export async function getModeles(filter: string) {
         : isNotNull(modeles.deletedAt),
     ),
     orderBy: [
+      desc(modeles.m_classe),
       asc(modeles.m_nom),
       asc(modeles.createdAt),
       asc(modeles.updatedAt),
@@ -134,7 +135,7 @@ export async function getVentes() {
       },
     },
     where: eq(ventes.en_id, Number(session.en_id)),
-    orderBy: [asc(ventes.v_date)],
+    orderBy: [desc(ventes.v_date)],
   });
 
   return takeXata(getAll, "many");
@@ -158,6 +159,7 @@ export async function getVenteDetails(v_id: string) {
               m_nom: true,
               m_type: true,
               m_memoire: true,
+              m_classe: true,
             },
           },
         },
@@ -246,11 +248,17 @@ export async function getIphonesInfos(barcode: string) {
           with: {
             vente: {
               // dans quelle ventes
+              columns: {
+                v_date: true,
+                v_id: true,
+              },
               with: {
                 client: {
                   // quelle client
                   columns: {
+                    c_id: true,
                     c_nom: true,
+                    en_id: true,
                   },
                 },
               },
@@ -297,6 +305,7 @@ export type DashboardType = {
   qNbRetours: string;
   qNbClients: string;
   qNbVentes: string;
+  qNbIphonesArr: string;
   qTopModeles: { nom: string; total_ventes: string }[];
 };
 
@@ -319,7 +328,7 @@ export async function getDashboard() {
   const queries = {
     qNbIphones: `SELECT coalesce(SUM(m_qte), 0) nb_stocks
                   FROM modeles 
-                  WHERE en_id = ${enId} and deleted_at IS NULL`,
+                  WHERE en_id = ${enId} and m_classe = 'CARTONS' and deleted_at IS NULL`,
 
     qNbRetours: `SELECT COUNT(vcommandes.vc_etat) nb_rets
                   FROM vcommandes 
@@ -350,6 +359,10 @@ export async function getDashboard() {
                    GROUP BY nom
                    ORDER BY total_ventes DESC
                    LIMIT 10`,
+
+    qNbIphonesArr: `SELECT coalesce(SUM(m_qte), 0) nb_arr
+                   FROM modeles 
+                   WHERE en_id = ${enId} and m_classe = 'ARRIVAGES' and deleted_at IS NULL`,
   };
 
   // Tableaux de bord de l'application
@@ -361,12 +374,14 @@ export async function getDashboard() {
         db.execute(sql.raw(queries.qNbClients)),
         db.execute(sql.raw(queries.qNbVentes)),
         db.execute(sql.raw(queries.qTopModeles)),
+        db.execute(sql.raw(queries.qNbIphonesArr)),
       ])) as unknown as [
         { nb_stocks: string },
         { nb_rets: string },
         { nb_clients: string },
         { nb_ventes: string },
         { nom: string; total_ventes: string }[],
+        { nb_arr: string },
       ];
 
       const datas: Record<string, unknown> = {
@@ -375,11 +390,12 @@ export async function getDashboard() {
         qNbClients: takeXata(allQueries[2], "one")?.nb_clients,
         qNbVentes: takeXata(allQueries[3], "one")?.nb_ventes,
         qTopModeles: takeXata(allQueries[4], "many"),
+        qNbIphonesArr: takeXata(allQueries[5], "one")?.nb_arr,
       };
 
       return datas as unknown as DashboardType;
     },
     ["dashboard"],
-    { revalidate: 120 }, // cache in 2 minutes
+    { revalidate: 60 }, // cache in 1 minutes
   )();
 }

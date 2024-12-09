@@ -21,7 +21,7 @@ import { fetcher } from "~/_lib/utils";
 export default function AddAchatPage() {
   const focus = useAutoFocus<HTMLInputElement>();
   const [state, action] = useFormState(addAchat, {
-    error: undefined as unknown as string,
+    error: "" as string,
   });
 
   const search = useSearchParams();
@@ -44,9 +44,9 @@ export default function AddAchatPage() {
     >
       <form action={action} className="mx-auto w-full md:w-96">
         <div className="flex flex-col gap-3 p-3">
-          {state.error ? (
+          {state?.error ? (
             <div className="rounded-lg bg-red-500 p-3 text-white">
-              {state.error}
+              {state?.error}
             </div>
           ) : null}
 

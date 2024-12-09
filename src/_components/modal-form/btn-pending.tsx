@@ -12,7 +12,7 @@ import { Button, buttonVariants, type ButtonProps } from "../ui/button";
 type BtnProps = {
   btnLabel?: React.ReactNode | JSX.Element | string;
   loadingNode?: React.ReactNode | JSX.Element | string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export function SubmitBtn({

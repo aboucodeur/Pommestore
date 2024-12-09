@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -73,6 +73,10 @@ const VALIDATE_ACTIONS = {
       .string()
       .min(2, "Le type doit contenir au moins 2 caractères")
       .max(25, "Le type ne peut pas dépasser 25 caractères"),
+    classe: z.enum(["CARTONS", "ARRIVAGES"], {
+      required_error: "classe invalide",
+      invalid_type_error: "classe invalide",
+    }),
     prix: z.coerce
       .number()
       .min(0, "Le prix doit être positif")
@@ -82,6 +86,7 @@ const VALIDATE_ACTIONS = {
       .number()
       .min(1, "La mémoire doit être positive")
       .default(64),
+
     imeis: z.string().max(5000, "Liste d'IMEI trop longue").optional(),
   }),
   vente: zodA({
@@ -285,6 +290,7 @@ export async function addModele(_prevState: unknown, formData: FormData) {
     type: formData.get("type") as string,
     prix: formData.get("prix") as string,
     memoire: formData.get("memoire") as string,
+    classe: formData.get("classe") as string,
     imeis: formData.get("imeis") as string,
   };
 
@@ -294,20 +300,40 @@ export async function addModele(_prevState: unknown, formData: FormData) {
   try {
     await db.transaction(async (tx) => {
       // Ajout du modèle
-      const [newModele] = await tx
-        .insert(modeles)
-        .values({
-          m_nom: data.nom,
-          m_qte: 0,
-          m_type: data.type,
-          m_prix: data.prix,
-          m_memoire: Number(data.memoire),
-          en_id: session.en_id,
-        })
-        .returning({ m_id: modeles.m_id });
+
+      // find modele by name,type,memoire,classe,en_id
+      const existingModele = await tx.query.modeles.findFirst({
+        columns: { m_id: true },
+        where: and(
+          eq(modeles.m_nom, data.nom),
+          eq(modeles.m_type, data.type),
+          eq(modeles.m_memoire, Number(data.memoire)),
+          eq(modeles.m_classe, data.classe as "CARTONS" | "ARRIVAGES"),
+          eq(modeles.en_id, session.en_id),
+        ),
+      });
+
+      let currentModele = null;
+      if (existingModele) currentModele = existingModele;
+      else {
+        const [newModele] = await tx
+          .insert(modeles)
+          .values({
+            m_nom: data.nom,
+            m_qte: 0,
+            m_type: data.type,
+            m_prix: data.prix,
+            m_memoire: Number(data.memoire),
+            m_classe: data.classe as "CARTONS" | "ARRIVAGES",
+            en_id: session.en_id,
+          })
+          .returning({ m_id: modeles.m_id });
+
+        currentModele = newModele;
+      }
 
       // Traitement des IMEI si présents
-      if (data.imeis?.trim() && newModele) {
+      if (data.imeis?.trim() && currentModele) {
         const imeiList = data.imeis
           .split(";")
           .map((imei) => imei.trim())
@@ -319,7 +345,7 @@ export async function addModele(_prevState: unknown, formData: FormData) {
           await tx.insert(iphones).values(
             imeiList.map((imei) => ({
               i_barcode: imei,
-              m_id: newModele.m_id,
+              m_id: currentModele.m_id,
               en_id: session.en_id,
             })),
           );
@@ -327,8 +353,8 @@ export async function addModele(_prevState: unknown, formData: FormData) {
           // Mise à jour de la quantité du modèle
           await tx
             .update(modeles)
-            .set({ m_qte: imeiList.length })
-            .where(eq(modeles.m_id, newModele.m_id));
+            .set({ m_qte: sql`m_qte + 1` })
+            .where(eq(modeles.m_id, currentModele.m_id));
         }
       }
     });
@@ -567,7 +593,7 @@ export async function addCommandeVente(formData: FormData) {
         error: getIphonesQuery
           .map(
             (iph, _idx) =>
-              `#${_idx + 1} => (${iph.modele.m_nom}) - ${iph.modele.m_type} - ${iph.modele.m_memoire} Go`,
+              `#${_idx + 1} => (${iph.modele.m_nom}) - ${iph.modele.m_type} - ${iph.modele.m_memoire} Go - ${iph.modele.m_classe} `,
           )
           .join("<br>"),
       };

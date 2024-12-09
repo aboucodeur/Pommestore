@@ -93,6 +93,7 @@ export default function AchatDetails(props: VenteDetailsProps) {
       m_qte: number;
       m_prix: string;
       m_memoire: number;
+      m_classe: string;
       deletedAt: Date | null;
     }[]
   >("/api/modeles", fetcher);
@@ -162,7 +163,12 @@ export default function AchatDetails(props: VenteDetailsProps) {
                                   modeles?.find(
                                     (modele) =>
                                       modele.m_id.toString() === selectedValue,
-                                  )?.m_memoire
+                                  )?.m_memoire +
+                                  " " +
+                                  modeles?.find(
+                                    (modele) =>
+                                      modele.m_id.toString() === selectedValue,
+                                  )?.m_classe
                                 : "Choisir un modele"}
                               <ChevronsUpDownIcon className="opacity-50" />
                             </Button>
@@ -193,7 +199,8 @@ export default function AchatDetails(props: VenteDetailsProps) {
                                         modele.m_type +
                                         " " +
                                         modele.m_memoire +
-                                        " Go"
+                                        " Go " +
+                                        modele.m_classe
                                       }
                                     >
                                       {modele.m_nom +
@@ -201,7 +208,8 @@ export default function AchatDetails(props: VenteDetailsProps) {
                                         modele.m_type +
                                         " " +
                                         modele.m_memoire +
-                                        " Go"}
+                                        " Go " +
+                                        modele.m_classe}
                                       {selectedValue ? (
                                         <Check
                                           className={cn(

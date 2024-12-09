@@ -53,7 +53,7 @@ export const users = createTable(
     role: varchar("role", { length: 5 })
       .$type<"root" | "admin" | "user">()
       .default("admin"), // root (superuser)
-    email: text("email").unique("user_unique1"),
+    email: text("email"),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
     name: text("name").notNull(),
@@ -102,6 +102,10 @@ export const modeles = createTable(
       .notNull()
       .default("0"),
     m_memoire: smallint("m_memoire").notNull(),
+    m_classe: varchar("m_classe", { length: 25 })
+      .$type<"CARTONS" | "ARRIVAGES">()
+      .default("CARTONS")
+      .notNull(), // classe du modele
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -116,6 +120,7 @@ export const modeles = createTable(
       table.m_nom,
       table.m_type,
       table.m_memoire,
+      table.m_classe, // oui c'est important logique
       table.en_id,
     ),
     fk1: foreignKey({

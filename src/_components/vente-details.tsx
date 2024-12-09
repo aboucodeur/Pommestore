@@ -57,6 +57,7 @@ type VenteDetailsProps = {
             m_nom: string;
             m_type: string;
             m_memoire: number;
+            m_classe: string;
           };
         };
       }[]
@@ -189,7 +190,8 @@ export default function VenteDetails(props: VenteDetailsProps) {
                             iphone.modele.m_type +
                             " " +
                             iphone.modele.m_memoire +
-                            " GO"
+                            " GO" +
+                            iphone.modele.m_classe
                           )
                             .toLowerCase()
                             .includes(searchFilter.toLowerCase().trim()),
@@ -199,7 +201,8 @@ export default function VenteDetails(props: VenteDetailsProps) {
                           <TableCell className="font-medium">
                             {panier.iphone.modele.m_nom}{" "}
                             {panier.iphone.modele.m_type}{" "}
-                            {panier.iphone.modele.m_memoire} (GO)
+                            {panier.iphone.modele.m_memoire} (GO) {" / "}
+                            {panier.iphone.modele.m_classe}
                             <div className="text-sm text-gray-500">
                               {panier.iphone.i_barcode}
                             </div>

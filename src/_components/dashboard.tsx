@@ -14,9 +14,15 @@ export default function Dashboard({ datas }: { datas: DashboardType }) {
   return (
     <div className="min-h-screenp-4 md:p-3">
       <div className="mx-auto max-w-7xl space-y-8">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-5">
           <StatsCard
-            title="Stocks d'iphones"
+            title="Cartons"
+            value={datas.qNbIphones}
+            icon={Smartphone}
+            delay={3000}
+          />
+          <StatsCard
+            title="Arrivages"
             value={datas.qNbIphones}
             icon={Smartphone}
             delay={3000}
