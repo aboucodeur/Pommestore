@@ -151,8 +151,8 @@ Grow your apps keeps feedbacks !
 
 - [*] Voir dans quelle vente l'iphone a ete vendu (tres important !)
 - [*] Gestion des iphones de type arrivages => m_classe
-- [*] Si le modele existe ajouter directement au stock (facilte aussi la tache de l'utilisateur )
-- [ ] Gestion arrivages lors de l'entree des commandes d'achat
+- [*] Si le modele existe ajouter directement au stock (facilite la tache de l'utilisateur !)
+- [*] Gestion arrivages lors de l'entree des commandes d'achat
 
 ## DEPLOY & PRODUCTION
 

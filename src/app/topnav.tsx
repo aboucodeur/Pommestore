@@ -60,7 +60,9 @@ export default function TopNav(props: { isRoot: boolean }) {
           </button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="flex flex-col gap-2 text-lg font-medium">{links}</nav>
+          <nav className="mt-5 flex flex-col gap-2 text-lg font-medium">
+            {links}
+          </nav>
         </SheetContent>
       </Sheet>
       <div className="flex items-center gap-2">

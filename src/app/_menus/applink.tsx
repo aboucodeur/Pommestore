@@ -26,6 +26,7 @@ export function AppLink({
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
         isActive && "bg-muted text-primary",
       )}
+      prefetch={false} // pour l'optimisation des performances !
     >
       {children}
       {label}

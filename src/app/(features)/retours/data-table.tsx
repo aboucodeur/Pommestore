@@ -37,7 +37,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import DebouncedInput from "~/_components/ui/debouced-input";
 import { addRetour } from "~/_lib/actions";
 import { toast } from "~/hooks/use-toast";
@@ -60,6 +60,9 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const [globalFilter, setGlobalFilter] = useState("");
+
+  // add retour transition
+  const [isPending, startTransition] = useTransition();
 
   const table = useReactTable({
     data,
@@ -124,25 +127,31 @@ export function DataTable<TData, TValue>({
         </DropdownMenu> */}
         {Object.keys(rowSelection).length > 0 ? (
           <Button
-            onClick={async () => {
-              const imeis = Object.keys(rowSelection).map(
-                (d) => (data[parseInt(d)] as Record<string, string>).i_id,
-              );
+            className="shadow-full"
+            disabled={isPending}
+            onClick={() => {
+              startTransition(async () => {
+                // async () => {
+                const imeis = Object.keys(rowSelection).map(
+                  (d) => (data[parseInt(d)] as Record<string, string>).i_id,
+                );
 
-              const datas = await addRetour(imeis);
-              if (datas.error) {
-                toast({
-                  title: "Oops ! Erreur",
-                  description: <p>{datas.error}</p>,
-                  variant: "destructive",
-                });
-              } else {
-                toast({
-                  title: "Message",
-                  description: <p>Retours effectuer avec success !</p>,
-                  variant: "success",
-                });
-              }
+                const datas = await addRetour(imeis);
+                if (datas.error) {
+                  toast({
+                    title: "Oops ! Erreur",
+                    description: <p>{datas.error}</p>,
+                    variant: "destructive",
+                  });
+                } else {
+                  toast({
+                    title: "Message",
+                    description: <p>Retours effectuer avec success !</p>,
+                    variant: "success",
+                  });
+                }
+                // }
+              });
             }}
           >
             <ArrowRightCircleIcon className="mr-2 h-4 w-4" />

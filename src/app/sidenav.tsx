@@ -17,7 +17,7 @@ export default function SideNav(props: { isRoot: boolean }) {
   ));
 
   return (
-    <div className="fixed hidden h-full border-r p-2 md:block md:w-60">
+    <div className="fixed mt-3 hidden h-full border-r p-2 md:block md:w-60">
       <nav className="text-md flex flex-col gap-2">{links}</nav>
     </div>
   );
