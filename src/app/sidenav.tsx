@@ -10,8 +10,8 @@ export default function SideNav(props: { isRoot: boolean }) {
     [props.isRoot],
   );
 
-  const links = APP_LINKS.map(({ link, label, icon }, _idx) => (
-    <AppLink key={_idx + 1} link={link} label={label}>
+  const links = APP_LINKS.map(({ link, label, icon, prefetch }, _idx) => (
+    <AppLink key={_idx + 1} link={link} label={label} prefetch={prefetch}>
       {icon ? icon : null}
     </AppLink>
   ));

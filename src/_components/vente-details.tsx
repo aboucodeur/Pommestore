@@ -8,7 +8,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Badge } from "~/_components/ui/badge";
 import { Button } from "~/_components/ui/button";
 import {
@@ -152,116 +152,122 @@ export default function VenteDetails(props: VenteDetailsProps) {
           )}
 
           {/* Cart Table */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <Input
-                placeholder="Chercher dans le pannier !"
-                autoComplete="off"
-                autoCorrect="off"
-                value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
-                maxLength={100}
-                title="Chercher dans le panier"
-              />
-              {/* <CardTitle className="flex items-center gap-1">
+          <Suspense
+            fallback={
+              <span className="loading loading-spinner loading-lg"></span>
+            }
+          >
+            <Card className="shadow-lg">
+              <CardHeader>
+                <Input
+                  placeholder="Chercher dans le pannier !"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  maxLength={100}
+                  title="Chercher dans le panier"
+                />
+                {/* <CardTitle className="flex items-center gap-1">
                 <ShoppingCart className="h-5 w-5" />
                 Panier
               </CardTitle> */}
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>iPhone</TableHead>
-                    <TableHead>État</TableHead>
-                    {/* <TableHead>Prix</TableHead> */}
-                    <TableHead>Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {props.paniers && props.paniers.length > 0 ? (
-                    props.paniers
-                      .filter(
-                        ({ iphone }) =>
-                          iphone.i_barcode.includes(searchFilter.trim()) ||
-                          (
-                            iphone.modele.m_nom +
-                            " " +
-                            iphone.modele.m_type +
-                            " " +
-                            iphone.modele.m_memoire +
-                            " GO" +
-                            iphone.modele.m_classe
-                          )
-                            .toLowerCase()
-                            .includes(searchFilter.toLowerCase().trim()),
-                      )
-                      .map((panier) => (
-                        <TableRow key={panier.i_id}>
-                          <TableCell className="font-medium">
-                            {panier.iphone.modele.m_nom}{" "}
-                            {panier.iphone.modele.m_type}{" "}
-                            {panier.iphone.modele.m_memoire} (GO) {" / "}
-                            {panier.iphone.modele.m_classe}
-                            <div className="text-sm text-gray-500">
-                              {panier.iphone.i_barcode}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {panier.vc_etat === 0 ? (
-                              <Badge>En cours</Badge>
-                            ) : panier.vc_etat === 1 ? (
-                              <Badge variant="default">Valider</Badge>
-                            ) : panier.vc_etat === 2 ? (
-                              <Badge variant="destructive">Rendu</Badge>
-                            ) : null}
-                          </TableCell>
-                          {/* <TableCell>{formatWari(panier.vc_prix,{minimumFractionDigits: 0})}</TableCell> */}
-                          <TableCell>
-                            <div className="flex gap-2">
-                              {props.vEtat && props?.vEtat > 0 ? (
-                                panier.vc_etat !== 2 && (
-                                  <Button
-                                    size={"sm"}
-                                    title="Retourner"
-                                    onClick={async () => {
-                                      await editCommandeVente(
-                                        panier.vc_id.toString(),
-                                      );
-                                    }}
-                                  >
-                                    <RotateCcw className="h-4 w-4" />
-                                  </Button>
-                                )
-                              ) : (
-                                <Button
-                                  variant="destructive"
-                                  size={"sm"}
-                                  title="Supprimer"
-                                  onClick={async () =>
-                                    await deleteCommandeVente(
-                                      panier.vc_id.toString(),
-                                    )
-                                  }
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                  ) : (
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={4} className="h-24 text-center">
-                        Aucun produit dans le panier
-                      </TableCell>
+                      <TableHead>iPhone</TableHead>
+                      <TableHead>État</TableHead>
+                      {/* <TableHead>Prix</TableHead> */}
+                      <TableHead>Action</TableHead>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {props.paniers && props.paniers.length > 0 ? (
+                      props.paniers
+                        .filter(
+                          ({ iphone }) =>
+                            iphone.i_barcode.includes(searchFilter.trim()) ||
+                            (
+                              iphone.modele.m_nom +
+                              " " +
+                              iphone.modele.m_type +
+                              " " +
+                              iphone.modele.m_memoire +
+                              " GO" +
+                              iphone.modele.m_classe
+                            )
+                              .toLowerCase()
+                              .includes(searchFilter.toLowerCase().trim()),
+                        )
+                        .map((panier) => (
+                          <TableRow key={panier.i_id}>
+                            <TableCell className="font-medium">
+                              {panier.iphone.modele.m_nom}{" "}
+                              {panier.iphone.modele.m_type}{" "}
+                              {panier.iphone.modele.m_memoire} (GO) {" / "}
+                              {panier.iphone.modele.m_classe}
+                              <div className="text-sm text-gray-500">
+                                {panier.iphone.i_barcode}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {panier.vc_etat === 0 ? (
+                                <Badge>En cours</Badge>
+                              ) : panier.vc_etat === 1 ? (
+                                <Badge variant="default">Valider</Badge>
+                              ) : panier.vc_etat === 2 ? (
+                                <Badge variant="destructive">Rendu</Badge>
+                              ) : null}
+                            </TableCell>
+                            {/* <TableCell>{formatWari(panier.vc_prix,{minimumFractionDigits: 0})}</TableCell> */}
+                            <TableCell>
+                              <div className="flex gap-2">
+                                {props.vEtat && props?.vEtat > 0 ? (
+                                  panier.vc_etat !== 2 && (
+                                    <Button
+                                      size={"sm"}
+                                      title="Retourner"
+                                      onClick={async () => {
+                                        await editCommandeVente(
+                                          panier.vc_id.toString(),
+                                        );
+                                      }}
+                                    >
+                                      <RotateCcw className="h-4 w-4" />
+                                    </Button>
+                                  )
+                                ) : (
+                                  <Button
+                                    variant="destructive"
+                                    size={"sm"}
+                                    title="Supprimer"
+                                    onClick={async () =>
+                                      await deleteCommandeVente(
+                                        panier.vc_id.toString(),
+                                      )
+                                    }
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="h-24 text-center">
+                          Aucun produit dans le panier
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </Suspense>
         </div>
 
         {/* Sale Information Card */}

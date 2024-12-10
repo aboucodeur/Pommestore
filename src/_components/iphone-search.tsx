@@ -203,6 +203,7 @@ export default function IphoneSearch(props: IphoneSearchProps) {
                           </TableCell>
                           <TableCell className="text-sm">
                             <Link
+                              prefetch={true}
                               className="flex items-center gap-2 text-primary"
                               href={`/ventes/${order.vente.v_id}?id=${order.vente.v_id}&v_date=${formatDateTime(order.vente.v_date)}&c_nom=${order.vente.client.c_nom}&c_id=${order.vente.client.c_id}&en_id=${order.vente.client.en_id}`}
                             >

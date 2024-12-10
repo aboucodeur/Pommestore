@@ -110,7 +110,7 @@ export const columns: ColumnDef<{
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/achats/${achat.a_id}${achatParams}`}>
+            <Link href={`/achats/${achat.a_id}${achatParams}`} prefetch={true}>
               <DropdownMenuItem className="text-green-400">
                 <EyeIcon className="mr-1 h-4 w-4" /> Details
               </DropdownMenuItem>

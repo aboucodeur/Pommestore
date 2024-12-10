@@ -153,6 +153,8 @@ Grow your apps keeps feedbacks !
 - [*] Gestion des iphones de type arrivages => m_classe
 - [*] Si le modele existe ajouter directement au stock (facilite la tache de l'utilisateur !)
 - [*] Gestion arrivages lors de l'entree des commandes d'achat
+- [*] Amelioration des performances des liens de l'application 
+      en activant le prefecthing des elements 
 
 ## DEPLOY & PRODUCTION
 
@@ -209,6 +211,8 @@ ALTER TABLE users ADD CONSTRAINT users_unique1 UNIQUE (u_prenom, u_nom),
 - formatDateTime
 - urlsParams prend en charge les dates
 - Mise en place de la base de donnees sur mon vps !
+- prefetching des liens de l'application !
+- amelioration du composant applink avec py-3 et user-select none !
 
 - Way to using server action
 - - like some question

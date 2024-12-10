@@ -7,11 +7,13 @@ export type LinksType = {
   link: string;
   label: string;
   icon?: React.ReactNode;
+  prefetch?: boolean | undefined;
 };
 
 export function AppLink({
   link,
   label,
+  prefetch,
   children,
 }: PropsWithChildren<LinksType>) {
   const pathname = usePathname(); // not include ?query and sub route
@@ -23,10 +25,10 @@ export function AppLink({
     <Link
       href={link}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+        "flex select-none items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-all hover:text-primary",
         isActive && "bg-muted text-primary",
       )}
-      prefetch={false} // pour l'optimisation des performances !
+      prefetch={prefetch}
     >
       {children}
       {label}

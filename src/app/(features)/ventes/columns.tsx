@@ -124,7 +124,7 @@ export const columns: ColumnDef<{
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/ventes/${vente.v_id}${venteParams}`}>
+            <Link href={`/ventes/${vente.v_id}${venteParams}`} prefetch={true}>
               <DropdownMenuItem className="text-green-400">
                 <EyeIcon className="mr-1 h-4 w-4" /> Details
               </DropdownMenuItem>
