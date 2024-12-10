@@ -23,7 +23,7 @@ export default function Dashboard({ datas }: { datas: DashboardType }) {
           />
           <StatsCard
             title="Arrivages"
-            value={datas.qNbIphones}
+            value={datas.qNbIphonesArr}
             icon={Smartphone}
             delay={3000}
           />

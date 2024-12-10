@@ -353,7 +353,7 @@ export async function addModele(_prevState: unknown, formData: FormData) {
           // Mise à jour de la quantité du modèle
           await tx
             .update(modeles)
-            .set({ m_qte: sql`m_qte + 1` })
+            .set({ m_qte: sql`m_qte + ${imeiList.length ?? 0}` })
             .where(eq(modeles.m_id, currentModele.m_id));
         }
       }
@@ -879,7 +879,7 @@ export async function addCommandeAchat(formData: FormData) {
       barcode: formData.get("barcode") as string,
       prix: formData.get("prix") as string,
       a_id: formData.get("a_id") as string,
-    };
+      };
 
     if (!isNumber(data.m_id) || !isNumber(data.a_id))
       return { error: "ID modèle ou achat invalide" };
